@@ -17,6 +17,7 @@ module data_acquire(
 
 reg reset_n;
 reg syncro;
+reg syncro_negedge;
 reg syncro_d1;
 wire syncro_re;
 reg [3:0] counter;
@@ -39,10 +40,14 @@ localparam ST_ADC_WAIT   = 6'b000010;
 localparam ST_OUT        = 6'b000001;
 
 
+always @(negedge clk_i) begin
+    syncro_negedge <= syncro_i;
+end
+
 always @(posedge clk_i) begin
     reset_n <= reset_n_i;
 
-    syncro <= syncro_i;
+    syncro <= syncro_i|syncro_negedge;
     syncro_d1 <= syncro;
 
     adc_data_rdy <= adc_data_rdy_i;
